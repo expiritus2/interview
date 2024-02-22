@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider as MobxProvider } from 'mobx-react';
 import mobxStores from './store';
+import 'toastr/build/toastr.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

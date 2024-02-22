@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 require('express-async-errors');
 const errorHandler = require('./middlewares/error-handler');
 const allApiV1Routes = require('./routes/v1');
+const NotFoundError = require('./errors/NotFoundError');
 
 dotenv.config({ path: `${__dirname}/.env`});
 
@@ -16,8 +17,8 @@ app.use(express.json());
 
 allApiV1Routes('/api/v1', app);
 
-app.all('*', async () => {
-    console.log('Route not found!');
+app.all('*', () => {
+    throw new NotFoundError();
 });
 
 app.use(errorHandler);
