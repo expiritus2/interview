@@ -6,7 +6,7 @@ const errorHandler = require('./middlewares/error-handler');
 const allApiV1Routes = require('./routes/v1');
 const NotFoundError = require('./errors/NotFoundError');
 
-dotenv.config({ path: `${__dirname}/.env`});
+dotenv.config({ path: `${__dirname}/.env` });
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,11 +18,11 @@ app.use(express.json());
 allApiV1Routes('/api/v1', app);
 
 app.all('*', () => {
-    throw new NotFoundError();
+  throw new NotFoundError();
 });
 
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}!`);
-})
+  console.log(`Listening on port ${PORT}!`);
+});
