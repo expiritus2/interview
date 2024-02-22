@@ -1,15 +1,24 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import App from '../../App';
-import NotFound from '../NotFound';
+import { Posts, NotFound } from 'pages';
 
 const AppRouter = () => {
-  return <BrowserRouter>
-    <Switch>
-      <Route path="/" exact component={App} />
-      <Route path="*" exact component={NotFound} />
-    </Switch>
-  </BrowserRouter>;
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route
+          path="/"
+          exact
+          component={Posts}
+        />
+        <Route
+          path="*"
+          exact
+          component={NotFound}
+        />
+      </Switch>
+    </BrowserRouter>
+  );
 };
 
 export default AppRouter;

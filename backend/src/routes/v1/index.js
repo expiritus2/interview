@@ -1,5 +1,5 @@
-const mainRoutes = require('./main');
+const postsRoutes = require('./posts');
 
 module.exports = (prefix, app) => {
-  app.use(prefix, mainRoutes);
+  app.use(prefix, postsRoutes);
 };

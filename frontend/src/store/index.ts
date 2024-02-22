@@ -1,10 +1,10 @@
-import { App } from './app';
+import { Posts } from './posts';
 
 class Root {
-    app: App;
+    posts: Posts;
 
     constructor() {
-        this.app = new App();
+        this.posts = new Posts();
     }
 }
 
