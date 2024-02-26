@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Posts, NotFound } from 'pages';
+import { Main, NotFound, Shows } from 'pages';
 
 const AppRouter = () => {
   return (
@@ -9,7 +9,12 @@ const AppRouter = () => {
         <Route
           path="/"
           exact
-          component={Posts}
+          component={Main}
+        />
+        <Route
+          path="/genres/:genreName"
+          exact
+          component={Shows}
         />
         <Route
           path="*"

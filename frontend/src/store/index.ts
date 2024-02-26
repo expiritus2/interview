@@ -1,10 +1,10 @@
-import { Posts } from './posts';
+import { Genres } from './genres';
 
 class Root {
-    posts: Posts;
+    genres: Genres;
 
     constructor() {
-        this.posts = new Posts();
+        this.genres = new Genres();
     }
 }
 

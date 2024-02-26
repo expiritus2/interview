@@ -3,7 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 require('express-async-errors');
 const errorHandler = require('./middlewares/error-handler');
-const allApiVqRoutes = require('./routes/v1');
+const allApiV1Routes = require('./routes/v1');
 const NotFoundError = require('./errors/NotFoundError');
 
 dotenv.config({ path: `${__dirname}/.env` });
@@ -15,7 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-allApiVqRoutes('/api/v1', app);
+allApiV1Routes('/api/v1', app);
 
 app.all('*', () => {
   throw new NotFoundError();
