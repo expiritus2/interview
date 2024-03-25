@@ -21,7 +21,7 @@ class GenresService {
     }
   }
 
-  async getGenresByShowName(search) {
+  getGenresByShowName(search) {
     this.list = this.list.filter((item) => {
       return item.show.name.toLowerCase().includes(search.toLowerCase());
     });
@@ -30,7 +30,7 @@ class GenresService {
     this.genres = [...new Set(this.genres)];
   }
 
-  async getShowsByGenres() {
+  getShowsByGenres() {
     this.shows = this.genres.reduce((acc, genre) => {
       acc[genre] = this.list.filter((item) => item.show.genres.includes(genre))
       return acc

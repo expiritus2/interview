@@ -5,8 +5,9 @@ class GenresController {
     // const genresService = new GenresService();
     const genresService = require('../services/Genres');
     await genresService.load();
-    await genresService.getGenresByShowName(req.query.search);
-    await genresService.getShowsByGenres();
+    genresService.getGenresByShowName(req.query.search);
+    genresService.getShowsByGenres();
+
     res.send(genresService.shows);
   }
 }

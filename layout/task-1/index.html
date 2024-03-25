@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+      #card1{
+          max-width: 600px;
+          min-width: 300px;
+          font-family: "Arial", "Helvetica";
+          margin-top: 10px;
+          margin-left: 15px;
+          margin-right: 15px;
+          margin-bottom: 14px;
+      }
+      #card1 .title{
+          font-size: 16px;
+          line-hight: 20px;
+          color: #22с;
+      }
+      #card1 .title:hover{
+          color: #dd0000;
+      }
+      #card1 .description-container{
+          display:flex;
+          align-content: flex-start;
+      }
+      #card1 .description{
+          font-size: 13px;
+          line-hight: 20px;
+          color: #333333;
+          white-space: wrap;
+      }
+      #card1 a{
+          color: #669;
+      }
+      #card1 a:hover{
+          color: #d00;
+      }
+      #card1 .image{
+          margin: 13px;
+          position: relative;
+      }
+      #card1 .text{
+          flex-shrink: 2;
+      }
+      #card1 .description{
+          margin-top: 17px;
+      }
+      #card1 .list ul{
+          list-style:none;
+          display: inline;
+          margin: 0px;
+          padding: 0px;
+      }
+      #card1 .list p{
+          margin: 0px;
+          display: inline;
+          font-weight: bold;
+      }
+      #card1 .list ul>li{
+          display: inline;
+      }
+      #card1 .buy{
+          font-size: 14px;
+          border: solid 1px rgba(159,127,0,.8);
+          border-radius: 3px;
+          color: #000;
+          background-color: #ffdb4d;
+          padding: 9px 20px;
+      }
+      #card1 .buy:hover{
+          background-color: #ffdb4d;
+          border-color: rgba(191,153,0,.8);
+      }
+      #card1 .buy:active{
+          background-color: #ffcc00;
+          border-color: rgba(159,127,0,.8);
+      }
+      #card1 .text-info{
+          margin: 7px 0px;
+      }
+      #card1 .svg-icon{
+          position: absolute;
+          bottom: 3px;
+          left: 3px;
+          background: white;
+          height: 10px;
+          width: 6px;
+          border-radius: 50%;
+          padding:5px 7px;
+      }
+  </style>
+</head>
+<body>
+<article id="card1">
+  <a class="title">Красавица и чудовище (Beuuty and the Beast)</a>
+  <div class="description-container">
+    <div>
+      <div class="image"> <img src="https://avatars.mds.yandex.net/get-afishanew/28638/97eeab3538bd9a80cc8710a7ee2f42d3/orig" width="60px">
+        <div class="svg-icon">
+          <svg  width="6" height="10" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0v10l6-5z" fill="#333" fill-rule="evenodd"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="text">
+      <div class="description">В заколдованном замке, скрытом в темном лесу, живет ужасное Чудовище. Растопить лед в его сердце и вернуть ему человеческий облик, сняв заклятие, может только прекрасная девушка, которая полюбит его таким, какой он есть.</div>
+      <div class="text-info">
+        <div class="list">
+          <p>Жанр:</p>
+          <ul>
+            <li><a>Жанр 1</a></li>
+            <li><a>Жанр 2</a></li>
+            <li><a>Жанр 2</a></li>
+            <li><a>Жанр 2</a></li>
+          </ul>
+        </div>
+        <div class="list">
+          <p>В ролях:</p>
+          <ul>
+            <li><a>Актер 1</a></li>
+            <li><a>Актер 2</a></li>
+            <li><a>Актер 2</a></li>
+            <li><a>Актер 2</a></li>
+          </ul>
+        </div>
+        <div class="info">США, 81 мин</div>
+      </div>
+      <button class="buy">
+        Купить билет
+      </button>
+    </div>
+
+  </div>
+</article>
+</body>
+</html>

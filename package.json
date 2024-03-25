@@ -1,0 +1,19 @@
+{
+  "name": "interview",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "start": "node ./index2.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@expiritus2.github.com:expiritus2/interview.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
