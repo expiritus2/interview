@@ -31,20 +31,20 @@ function canGetCount(count) {
 // 4) "adddaabaa" -> 3
 
 
-const countSymbols = (S) => {
+const countSymbols = (str) => {
   let currentChar;
   let currentCount = 0;
   let max = 0;
 
-  for (let i = 0; i < S.length; i++) {
-    if (currentChar === S.charAt(i)) {
+  for (let i = 0; i < str.length; i++) {
+    if (currentChar === str.charAt(i)) {
       currentCount++;
     } else {
       if (max < currentCount) {
         max = currentCount;
       }
 
-      currentChar = S.charAt(i);
+      currentChar = str.charAt(i);
       currentCount = 1;
     }
   }
@@ -249,15 +249,15 @@ function atm(sum, limit) {
     const currentBanknoteAmount = Math.floor(sum / nominal);
     const currentAmount = currentBanknoteAmount > limitAmount ? limitAmount : currentBanknoteAmount;
     sum -= currentAmount * nominal;
-    result.push([nominal, currentAmount]);
+    result.push([currentAmount, nominal]);
   });
 
   if(sum === 0) {
     result.forEach((value, index) => {
-      sortedLimits[index][1] -= value[index][1]
+      sortedLimits[index][1] -= value[0]
     });
 
-    return result.map((x) => x[1]).map((x) => x.join('x')).join(' ');
+    return result.filter((x) => x[0]).map((x) => x.join('x')).join(' ');
   } else {
     return 'Error: Not enough money';
   }
