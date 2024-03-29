@@ -14,15 +14,17 @@ function reverse(array) {
   return copyArr;
 }
 
+
 function canGetCount(count) {
   let number = count;
-  return function() {
+
+  return () => {
     if (number > 0) {
       number--;
       return 'yes';
-    } else {
-      return 'no';
     }
+
+    return 'no';
   };
 }
 
@@ -30,7 +32,6 @@ function canGetCount(count) {
 // 2) "a" -> 1
 // 3) "abbc" -> 2
 // 4) "adddaabaa" -> 3
-
 
 const countSymbols = (str) => {
   let currentChar;
@@ -58,9 +59,19 @@ const countSymbols = (str) => {
 };
 
 function getRandomHexColor() {
-  let random = Math.floor(Math.random() * (256 * 256 * 256));
-  return '#' + random.toString(16);
+  let result = '#';
+  for (let i = 0; i < 6; i++) {
+    let random = Math.floor(Math.random() * 16);
+    result += random.toString(16);
+  }
+  return result;
 }
+
+
+// function getRandomHexColor() {
+//   let random = Math.floor(Math.random() * (256 * 256 * 256));
+//   return '#' + random.toString(16);
+// }
 
 // Написать кеширующую функцию со следующим поведением:
 // Если getData еще не вызывалась, вызвать и закешировать результат;
@@ -83,33 +94,32 @@ function getData() {
 // Если вызывалась недавно, то вернуть сохраненный результат;
 // Если вызывалась давно, заново сходить за данными.
 
-// function cache(getData, ts) {
-//   let lastCall;
-//   let cache;
-//
-//   return async () => {
-//     if (!lastCall || Date.now() - lastCall >= ts) {
-//       cache = await getData();
-//       lastCall = Date.now();
-//     }
-//
-//     return cache;
-//   };
-// }
-
 function cache(getData, ts) {
   let lastCall;
-  let dataPromise;
+  let data;
 
   return async () => {
     if (!lastCall || Date.now() - lastCall >= ts) {
-      dataPromise = getData;
+      data = await getData();
       lastCall = Date.now();
     }
-
-    return dataPromise;
+    return data;
   };
 }
+
+// function cache(getData, ts) {
+//   let lastCall;
+//   let dataPromise;
+//
+//   return async () => {
+//     if (!lastCall || Date.now() - lastCall >= ts) {
+//       dataPromise = getData;
+//       lastCall = Date.now();
+//     }
+//
+//     return dataPromise;
+//   };
+// }
 
 function throttle(fn, timeout) {
   let inThrottle = false;
@@ -187,6 +197,7 @@ function isPalindrome(str) {
 
 function testFn(array) {
   const buf = array.filter((value) => value % 2 === 1).sort((a, b) => a - b);
+
   let bufIndex = 0;
 
   for (let i = 0; i < array.length; i++) {
@@ -201,8 +212,8 @@ function testFn(array) {
 
 function compose(...functionArray) {
   return function(...args) {
-    return functionArray.reduceRight((acc, val) => {
-      return [val.apply(this, acc)];
+    return functionArray.reduceRight((acc, fn) => {
+      return [fn.apply(this, acc)];
     }, args)[0];
   };
 }
@@ -228,6 +239,21 @@ function bind(func, ctx, ...args) {
 // flatten([1, 'any [complex] string', null, function() {}, [1, 2, [3, '4'], 0], [], { a: 1 }]);
 // возвращает
 //      [1, 'any [complex] string', null, function() {}, 1, 2, 3, '4', 0, { a: 1 }]
+
+// function flatten(list) {
+//   const result = [];
+//
+//   for(const item of list) {
+//     if(Array.isArray(item)) {
+//       const nestedResult = flatten(item);
+//       result.push(...nestedResult);
+//     } else {
+//       result.push(item);
+//     }
+//   }
+//
+//   return result;
+// }
 
 function flatten(list) {
   const result = [];
@@ -265,7 +291,6 @@ function flatten(list) {
 
 // limits = [[1000, 6], [100, 5], [50, 1]]
 
-
 function atm(sum, limit) {
   const sortedLimit = limit.sort((a, b) => b[0] - a[0]);
   const smallestBanknote = sortedLimit[sortedLimit.length - 1][0];
@@ -284,11 +309,11 @@ function atm(sum, limit) {
   });
 
   if (sum === 0) {
-    result.forEach((res) => {
-      sortedLimit[1] -= res[0];
+    result.forEach((value, index) => {
+      sortedLimit[1] -= value[0];
     });
 
-    return result.filter((val) => val[0]).map((val) => val.join('x')).join(' ');
+    return result.filter((x) => x[0]).map((x) => x.join('x')).join(' ');
   } else {
     return 'Error: Not enough money';
   }
@@ -383,12 +408,6 @@ function allSentences(aoa) {
 в порядке следования по маршруту.
 */
 
-// const tickets = [
-//   { from: 'London', to: 'Moscow' },
-//   { from: 'NY', to: 'London' },
-//   { from: 'Moscow', to: 'SPb' },
-// ]
-
 // const fromCache = {
 //   "London": {
 //     "from": "London",
@@ -418,6 +437,12 @@ function allSentences(aoa) {
 //     "to": "SPb"
 //   }
 // }
+
+// const tickets = [
+//   { from: 'London', to: 'Moscow' },
+//   { from: 'NY', to: 'London' },
+//   { from: 'Moscow', to: 'SPb' },
+// ]
 
 function getRoute(tickets = []) {
   if (!tickets.length) {
@@ -462,11 +487,11 @@ function getRoute(tickets = []) {
 async function findPath(start, end, fetchFlights) {
   const visited = new Set();
   const stack = [
-    [start, [start]],
+    { node: start, path: [start] },
   ];
 
   while (stack.length) {
-    const [currentNode, path] = stack.pop();
+    const { node: currentNode, path } = stack.pop();
 
     if (currentNode === end) {
       return path;
@@ -478,7 +503,7 @@ async function findPath(start, end, fetchFlights) {
       const neighbours = await fetchFlights(currentNode) || [];
       for (let neighbour of neighbours) {
         if (!visited.has(neighbour)) {
-          stack.push([neighbour, [...path, neighbour]]);
+          stack.push({ node: neighbour, path: [...path, neighbour] });
         }
       }
     }
@@ -493,6 +518,7 @@ async function findPath(start, end, fetchFlights) {
 
 // Пример:
 // [2, 3, 5, 6, 7, 8, 9, 11, 20, 21, 22] -> “2-3,5-9,11,20-22”
+
 
 function convertToIntervalString(arr) {
   let result = [];
@@ -514,6 +540,27 @@ function convertToIntervalString(arr) {
   return result.join(',');
 }
 
+
+// function convertToIntervalString(arr) {
+//   let result = [];
+//   let start = arr[0];
+//   let end = arr[0];
+//
+//   for (let i = 1; i < arr.length; i++) {
+//     if (arr[i] === end + 1) {
+//       end = arr[i];
+//     } else {
+//       result.push(start === end ? start.toString() : `${start}-${end}`);
+//       start = arr[i];
+//       end = arr[i];
+//     }
+//   }
+//
+//   result.push(start === end ? start.toString() : `${start}-${end}`);
+//
+//   return result.join(',');
+// }
+
 // Нужно реализовать структуру данных, которая реализует методы:
 // а) like(userId) – пользователь userId поставил лайк
 // б) unlike(userId) – пользователь userId убрал лайк
@@ -526,10 +573,10 @@ class LikesCounter {
 
   like(userId) {
     if (this.likes[userId] === undefined) {
-      this.likes[userId] = 1;
-    } else {
-      this.likes[userId] += 1;
+      this.likes[userId] = 0;
     }
+
+    this.likes[userId] += 1;
   }
 
   unlike(userId) {
@@ -586,6 +633,94 @@ function minCostPainting(houses) {
   return Math.min(...dp[n - 1]);
 }
 
+// ["aba", "cdc", "eae"]
+// ["aaa", "aaa", "aa"]
+// ["aaa","acb"]
+
+const findLUSLength = function(strs) {
+  function isSubsequence(str1, str2) {
+    let i = 0;
+    for (let j = 0; j < str1.length && i < str2.length; j++) {
+      const char1 = str1.charAt(i);
+      const char2 = str2.charAt(j);
+
+      if (char1 === char2) {
+        i++;
+      }
+    }
+
+    return i === str1.length;
+  }
+
+
+  strs.sort((a, b) => b.length - a.length);
+
+  for (let i = 0; i < strs.length; i++) {
+    let isLUS = true;
+    for (let j = 0; j < strs.length; j++) {
+      if (i !== j && isSubsequence(strs[i], strs[j])) {
+        isLUS = false;
+        break;
+      }
+    }
+
+    if (isLUS) {
+      return strs[i].length;
+    }
+  }
+
+  return -1;
+};
+
+// Типичный пример первой задачи: в массиве из чисел нужно найти наибольший неубывающий подотрезок,
+// то есть такой подотрезок из чисел, где каждое следующее число больше или равно предыдущему.
+// При разработке алгоритма важно учитывать крайние случаи и время, за которое он выполнится.
+
+// [1, 3, 5, 4, 7, 8, 9, 2, 1, 2, 3, 4, 5];
+
+function testFn2(arr) {
+  let result = [];
+  let currentResult = [arr[0]];
+
+  for (let i = 1; i < arr.length; i++) {
+    const currentNumber = arr[i]; // 5
+    const prevNumber = arr[i - 1]; // 4
+
+    if (currentNumber >= prevNumber) {
+      currentResult.push(currentNumber);
+    } else {
+      if (currentResult.length > result.length) {
+        result = currentResult;
+      }
+      currentResult = [currentNumber];
+    }
+  }
+
+  if (currentResult.length > result.length) {
+    result = currentResult;
+  }
+
+  return result;
+}
+
+function timeLimit(fn, t) {
+  return function(...args) {
+    return new Promise((resolve, reject) => {
+      let timer = setTimeout(() => {
+        reject('Time Limit Exceeded');
+      }, t);
+
+      fn(...args).then((result) => {
+        clearTimeout(timer);
+        resolve(result);
+      }).catch((error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+    });
+  };
+}
+
 module.exports = {
   reverse,
   canGetCount,
@@ -603,5 +738,7 @@ module.exports = {
   findPath,
   convertToIntervalString,
   LikesCounter,
-  minCostPainting
+  minCostPainting,
+  findLUSLength,
+  testFn2,
 };

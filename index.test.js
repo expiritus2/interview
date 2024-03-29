@@ -15,7 +15,9 @@ const {
   findPath,
   convertToIntervalString,
   LikesCounter,
-  minCostPainting
+  minCostPainting,
+  findLUSLength,
+  testFn2,
 } = require('./index');
 
 describe('reverse', () => {
@@ -55,16 +57,17 @@ describe('countSymbols', () => {
     const str3 = 'abbc';
     const str4 = 'adddaabaa';
 
-    expect(countSymbols(str1)).toEqual({ char: '', max: 0 });
-    expect(countSymbols(str2)).toEqual({ char: 'a', max: 1 });
-    expect(countSymbols(str3)).toEqual({ char: 'b', max: 2 });
-    expect(countSymbols(str4)).toEqual({ char: 'd', max: 3 });
+    expect(countSymbols(str1)).toEqual(0);
+    expect(countSymbols(str2)).toEqual(1);
+    expect(countSymbols(str3)).toEqual(2);
+    expect(countSymbols(str4)).toEqual(3);
   });
 });
 
 describe('getRandomHexColor', () => {
   it('test', () => {
     const result = getRandomHexColor();
+    console.log('result', result);
 
     expect(result.length).toEqual(7);
   });
@@ -318,8 +321,40 @@ describe('minCostPainting', () => {
     const houses = [
       [1, 2, 3],
       [1, 3, 2],
-      [3, 1, 2]
+      [3, 1, 2],
     ];
     expect(minCostPainting(houses)).toEqual(4); // Выведет: 4
-  })
-})
+  });
+});
+
+describe('findLUSLength', () => {
+  it('test case 1', () => {
+    expect(findLUSLength(['aba', 'cdc', 'eae'])).toEqual(3);
+  });
+
+  it('test case 2', () => {
+    expect(findLUSLength(['aaa', 'aaa', 'aa'])).toEqual(-1);
+  });
+
+  it('test case 3', () => {
+    expect(findLUSLength(['aaa', 'acb'])).toEqual(3);
+  });
+});
+
+describe('testFn2', () => {
+  it('test case 1', () => {
+    const input = [1, 3, 5, 4, 7, 8, 9, 2, 1, 2, 3, 4, 5];
+    expect(testFn2(input)).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it('test case 2', () => {
+    const input = [1, 3, -5, 4, 7, 8, 9, 2, 1, 2, 3, 4, ];
+    expect(testFn2(input)).toEqual([-5, 4, 7, 8, 9]);
+  });
+
+  it('test case 2', () => {
+    const input = [1, 3, -5, 4, 7, 8, 9, 2, 8, 9, 10, 11, 12, 18, 1, 2, 3, 4];
+    expect(testFn2(input)).toEqual([2, 8, 9, 10, 11, 12, 18]);
+  });
+});
+
