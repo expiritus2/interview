@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+  async function fetchData(url) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(url), 300);
+    });
+    // const response = await fetch(url);
+    // return response.text();
+  }
+
+  // ['url1', 'url2', 'url3']
+
+  async function parallelLimit(urls, limit, callback) {
+    const results = [];
+    const memo = {};
+    let index = 0;
+
+    async function fetchUrl(url, currentIndex) {
+      let result;
+      if (memo[url]) {
+        result = memo[url];
+      } else {
+        result = await fetchData(url);
+        memo[url] = result;
+      }
+
+      results[currentIndex] = result;
+    }
+
+    async function processNext() {
+      if (index < urls.length) {
+        const url = urls[index];
+        const currentIndex = index;
+        index++;
+
+        await fetchUrl(url, currentIndex);
+        console.log('currentIndex', currentIndex);
+        await processNext();
+      }
+    }
+
+    const promises = [];
+    for (let i = 0; i < limit; i++) {
+      promises.push(processNext());
+    }
+
+    await Promise.all(promises);
+    callback(results);
+  }
+
+  parallelLimit(['url1', 'url2', 'url3'], 2, (results) => {
+    console.log('results', results);
+  });
+</script>
+</body>
+</html>

@@ -18,7 +18,21 @@ const {
   minCostPainting,
   findLUSLength,
   testFn2,
+  parallelLimit,
+  getNodes,
+  folders,
 } = require('./index');
+
+describe('parallelLimit', () => {
+  test('should fetch data for all URLs with the given limit', async () => {
+    const urls = ['url1', 'url2', 'url3'];
+    const limit = 2;
+
+    await parallelLimit(urls, limit, (results) => {
+      console.log(results);
+    });
+  });
+});
 
 describe('reverse', () => {
   it('should reverse array with even array elements', () => {
@@ -348,13 +362,110 @@ describe('testFn2', () => {
   });
 
   it('test case 2', () => {
-    const input = [1, 3, -5, 4, 7, 8, 9, 2, 1, 2, 3, 4, ];
+    const input = [1, 3, -5, 4, 7, 8, 9, 2, 1, 2, 3, 4];
     expect(testFn2(input)).toEqual([-5, 4, 7, 8, 9]);
   });
 
   it('test case 2', () => {
     const input = [1, 3, -5, 4, 7, 8, 9, 2, 8, 9, 10, 11, 12, 18, 1, 2, 3, 4];
     expect(testFn2(input)).toEqual([2, 8, 9, 10, 11, 12, 18]);
+  });
+});
+
+describe('parallelLimit', () => {
+  it('parallelLimit should correctly process fetching multiple URLs with limits', async () => {
+    const urls = ['url1', 'url2', 'url3', 'url4', 'url5', 'url6', 'url7', 'url8', 'url9', 'url10'];
+    const limit = 3;
+
+    const expectedResults = ['url1', 'url2', 'url3', 'url4', 'url5', 'url6', 'url7', 'url8', 'url9', 'url10'];
+
+    await parallelLimit(urls, limit, async (results) => {
+      expect(results).toEqual(expectedResults);
+    });
+  });
+
+  it('parallelLimit should correctly process fetching multiple URLs with limits', async () => {
+    const urls = ['url1'];
+    const limit = 2;
+
+    const expectedResults = ['url1'];
+
+    await parallelLimit(urls, limit, async (results) => {
+      expect(results).toEqual(expectedResults);
+    });
+  });
+});
+
+describe('getNodes', () => {
+  const tree = {
+    type: 'nested',
+    children: [
+      { type: 'added', value: 42 },
+      {
+        type: 'nested',
+        children: [
+          { type: 'added', value: 43 },
+        ],
+      },
+      { type: 'added', value: 44 },
+    ],
+  };
+
+  it('test case 1', () => {
+    const addedItems = getNodes(tree, 'added');
+
+    expect(addedItems).toEqual([
+      { type: 'added', value: 42 },
+      { type: 'added', value: 43 },
+      { type: 'added', value: 44 },
+    ]);
+  });
+
+  it('test case 2', () => {
+    const addedItems = getNodes(tree, 'nested');
+
+    expect(addedItems).toEqual([
+      { type: 'nested', value: undefined },
+      { type: 'nested', value: undefined },
+    ]);
+  });
+});
+
+describe('folders', () => {
+  const tree = {
+    name: 'folder',
+      children: [
+        { name: 'file1.txt' },
+        { name: 'file2.txt' },
+        {
+          name: 'images',
+          children: [
+            { name: 'image.png' },
+            {
+              name: 'vacation',
+              children: [
+                { name: 'crocodile.png' },
+                { name: 'penguin.png' },
+              ],
+            },
+          ],
+        },
+        { name: 'shopping-list.pdf' }
+      ]
+  }
+
+  it('test case 1', () => {
+    const result = folders(tree);
+    expect(result).toEqual(`folder
+ file1.txt
+ file2.txt
+ images
+  image.png
+  vacation
+   crocodile.png
+   penguin.png
+ shopping-list.pdf
+`);
   });
 });
 

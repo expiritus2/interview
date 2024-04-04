@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "node-fetch": "^3.3.2"
   },
   "scripts": {
     "start": "node ./index2.js",

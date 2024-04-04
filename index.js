@@ -540,27 +540,6 @@ function convertToIntervalString(arr) {
   return result.join(',');
 }
 
-
-// function convertToIntervalString(arr) {
-//   let result = [];
-//   let start = arr[0];
-//   let end = arr[0];
-//
-//   for (let i = 1; i < arr.length; i++) {
-//     if (arr[i] === end + 1) {
-//       end = arr[i];
-//     } else {
-//       result.push(start === end ? start.toString() : `${start}-${end}`);
-//       start = arr[i];
-//       end = arr[i];
-//     }
-//   }
-//
-//   result.push(start === end ? start.toString() : `${start}-${end}`);
-//
-//   return result.join(',');
-// }
-
 // Нужно реализовать структуру данных, которая реализует методы:
 // а) like(userId) – пользователь userId поставил лайк
 // б) unlike(userId) – пользователь userId убрал лайк
@@ -590,7 +569,6 @@ class LikesCounter {
   }
 
   getMax() {
-    const values = Object.values(this.likes);
     return Math.max(...Object.values(this.likes));
   }
 }
@@ -721,6 +699,325 @@ function timeLimit(fn, t) {
   };
 }
 
+
+/**
+ * На вход функции подаётся массив границ и массив значений. Оба массива целых чисел, отсортированных по возрастанию.
+ * Например, границы [4, 8] и значения [1, 3, 4, 5, 8, 9].
+ * Нужно раскидать значения по диапазонам (-inf; 4], (4; 8], (8; +inf) и для каждого
+ * посчитать количество и сумму попавших в неё значений:
+ * [1, 3, 4] -> {quantity: 3, sum: 8}, [5, 8] -> {quantity: 2, sum: 13}, [9] -> {quantity: 1, sum: 9}
+ * На выходе всегда ожидается массив размером на 1 больше, чем количество границ.
+ * --------------------------------
+ * [4, 8], [1, 3, 4, 5, 8, 9] => [{quantity: 3, sum: 8}, {quantity: 2, sum: 13}, {quantity: 1, sum: 9}]
+ *        4     8
+ *  1 3 4 | 5 8 | 9
+ * 2 границы создают 3 диапазона.
+ * --------------------------------
+ * [5], [2, 4, 6, 8] => [{quantity: 2, sum: 6}, {quantity: 2, sum: 14}]
+ *     5
+ * 2 4 | 6 8
+ * Числа 2, 4 попадают в первый диапазон, остальные - во второй.
+ * --------------------------------
+ *  [7], [1, 2] => [{quantity: 2, sum: 3}, {quantity: 0, sum: 0}]
+ *      7
+ *  1 2 |
+ * Второй диапазон пуст.
+ **/
+
+function calculate(borders, values) {
+}
+
+// Написать калькулятор выражений в обратной польской нотации.
+//   Польская нотация
+// Выражение состоит из операндов: чисел и знаков операций + - * /
+// Выражение читается слева направо
+// Операнды в выражении разделяются пробелами
+// Когда в выражении встречается знак операции, выполняется соответствующая операция над двумя последними встретившимися перед ним операндами в порядке их записи
+// Результатом вычисления выражения становится результат последней вычисленной операции
+// Примеры:
+//   calc('7 2 * 3 +')  => 7 * 2 + 3 = 17
+// calc('7 2 3 * -')  => 7 - (2 * 3) = 1
+// calc('7 2 3 1 + * -')  => 7 - 2 * (3 + 1) = -1
+//
+// calc('11 -12 -')  => ?
+//   calc('7 2 3 1 * - - 3 5 + -') => ?
+//
+//   calc('1 1 + +')   => Error in Syntax
+// calc('1 2 2 *')   => Error in Syntax
+// calc('1 b + c -')  => Error in Operands
+
+
+// Есть функция batchFetch для запроса данных из бэкенда по id, работающая следующим образом:
+//
+// function batchFetch(ids: string[]): Promise<Record<string, object>>;
+//
+// batchFetch([1]) -> Promise { 1: { id: 1, title: 'one', ... } }
+// batchFetch([2]) -> Promise { 2: { id: 2, title: 'two', ... } }
+// batchFetch([1, 2]) -> Promise { 1: { id: 1, title: 'one', ... }, 2: { id: 2, title: 'two', ... } }
+//
+//
+// Нужно написать обертку, создающую функцию "smartRequest(id)",
+// склеивающую вызовы в один (c окном timeout мс),
+// для уменьшения количества запросов к бэкенду.
+// Важно отметить, это не debounce, а склеивание запросов к бэкенду, т.е. все вызовы функции должны вернуть значение.
+//
+// const smartRequest = createSmartRequest(100);
+//
+// const a = smartRequest(1) // начинаем ждать 100мс
+// const b = smartRequest(2) // все еще ждем
+// прошло 100 мс, вызывается batchFetch([1, 2]) и резолвятся промизы a и b
+//
+// - Считаем, что в пределах таймаута все id уникальные
+// - Считаем, что batchFetch всегда успешен
+
+async function batchFetch(ids) {
+  const promises = [];
+  for (const id of ids) {
+    promises.push(new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ id, title: id });
+      }, 10);
+    }));
+  }
+
+  return Promise.all(promises);
+}
+
+function createSmartRequest(timeout) {
+  let timer;
+  const batches = [];
+
+  return function smartRequest(id) {
+    batches.push(id);
+
+    if (!timer) {
+      timer = setTimeout(async () => {
+        await batchFetch(batches);
+        batches.length = 0;
+        timer = null;
+      }, timeout);
+    }
+  };
+}
+
+// Дана вложенная структура файлов и папок.
+// {
+//   name: 'folder',
+//   children: [
+//     { name: 'file1.txt' },
+//     { name: 'file2.txt' },
+//     {
+//       name: 'images',
+//       children: [
+//         { name: 'image.png' },
+//         {
+//           name: 'vacation',
+//           children: [
+//             { name: 'crocodile.png' },
+//             { name: 'penguin.png' },
+//           ],
+//         },
+//       ],
+//     },
+//     { name: 'shopping-list.pdf' },
+//   ],
+// };
+// Нужно вывести в консоль файлы и папки с отступами, чтобы показать вложенность. Решение должно учитывать любую вложенность элементов (т.е. не должно содержать рекурсивные вызовы). Входные данные должны оставаться неизменными. Пример вывода:
+//   folder
+//      file1.txt
+//      file2.txt
+//      images
+//          image.png
+//          vacation
+//              crocodile.png
+//              penguin.png
+//      shopping-list.pdf
+
+function folders(tree) {
+  let result = '';
+  const stack = [];
+  let current = { array: [tree], index: 0 };
+  let nestIndex = 0;
+
+  const getString = (name) => {
+    const spaces = Array(nestIndex).fill('').reduce((a) => a + ' ', '');
+    return `${spaces}${name}\n`;
+  }
+
+  while (current) {
+    const { array, index } = current;
+    current.index++;
+
+    if (index < array.length) {
+      if (Array.isArray(array[index].children)) {
+        result += getString(array[index].name);
+        stack.push(current);
+        current = { array: array[index].children, index: 0 };
+        nestIndex++;
+      } else {
+        result += getString(array[index].name);
+      }
+    } else {
+      current = stack.pop();
+      nestIndex--;
+    }
+  }
+
+  return result;
+}
+
+
+// Дана древовидная структура следующего формата:
+//   const tree = {
+//     type: 'nested',
+//     children: [
+//       { type: 'added', value: 42 },
+//       {
+//         type: 'nested',
+//         children: [
+//           { type: 'added', value: 43 },
+//         ]
+//       },
+//       { type: 'added', value: 44 },
+//       ...
+//     ]
+//   }
+// Необходимо написать функцию getNodes(tree, type), которая возвращает все ноды в порядке следования, соответсвующие переданному типу.
+//   Глубина вложенности любая.
+//   Пример:
+
+function getNodes(tree, type) {
+  const result = [];
+  const stack = [];
+  let current = { array: [tree], index: 0 };
+
+  while (current) {
+    const { array, index } = current;
+    current.index++;
+
+    if (index < array.length) {
+      if (array[index].type === type) {
+        result.push({ type, value: array[index].value });
+      }
+
+      if (Array.isArray(array[index].children)) {
+        stack.push(current);
+        current = { array: array[index].children, index: 0 };
+      }
+    } else {
+      current = stack.pop();
+    }
+  }
+
+  return result;
+}
+
+// Результат
+
+// [
+//   { type: 'added', value: 42 },
+//   { type: 'added', value: 43 },
+//   { type: 'added', value: 44 },
+//   ...
+// ]
+
+
+/*
+Дан массив ссылок: ['url1', 'url2', ...] и лимит одновременных запросов (limit)
+Необходимо реализовать функцию, которая опросит урлы в том порядке, в котором они идут в массиве, и вызовет callback c массивом ответов
+['url1_answer', 'url2_answer', ...] так, чтобы в любой момент времени выполнялось не более limit
+запросов (как только любой из них завершился, сразу же отправляется следующий)
+Т.е. нужно реализовать шину с шириной равной limit.
+
+Требования:
+- Порядок в массиве ответов должен совпадать с порядком в массиве ссылок
+Дополнительно:
+- Функция должна обладать мемоизацией (один и тот же урл не опрашивать дважды)
+
+Для опроса можно использовать fetch или $.get
+Ошибки обрабатывать не нужно
+
+*/
+// declare function fetch(url: string): Promise<string>;
+// declare function $.get(url: string, callback: (res: string) => void): void;
+
+async function fetchData(url) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(url), 300);
+  });
+}
+
+async function parallelLimit(urls, limit, callback) {
+  const results = [];
+  const memo = {};
+  let index = 0;
+
+  async function fetchUrl(url, currentIndex) {
+    let result;
+    if (memo[url]) {
+      result = memo[url];
+    } else {
+      result = await fetchData(url);
+      memo[url] = result;
+    }
+
+    results[currentIndex] = result;
+  }
+
+  async function processNext() {
+    if (index < urls.length) {
+      const currentUrl = urls[index];
+      const currentIndex = index;
+      index++;
+
+      await fetchUrl(currentUrl, currentIndex);
+      await processNext();
+    }
+  }
+
+  const promises = [];
+  for (let i = 0; i < Math.min(limit, urls.length); i++) {
+    promises.push(processNext());
+  }
+
+  await Promise.all(promises);
+  callback(results);
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// let i = 10;
+// const array = [];
+//
+// while (i--) {
+//   array.push(function() {
+//     return i + i;
+//   });
+// }
+//
+// console.log([
+//   array[0](), // -2
+//   array[1](), // -2
+// ]);
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// let i = 10;
+// const array = [];
+//
+// while (--i) {
+//   array.push(function() {
+//     return i + i;
+//   });
+// }
+//
+// console.log([
+//   array[0](), // 0
+//   array[1](), // 0
+// ]);
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++
+
 module.exports = {
   reverse,
   canGetCount,
@@ -741,4 +1038,7 @@ module.exports = {
   minCostPainting,
   findLUSLength,
   testFn2,
+  parallelLimit,
+  getNodes,
+  folders,
 };
