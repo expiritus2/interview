@@ -21,6 +21,7 @@ const {
   parallelLimit,
   getNodes,
   folders,
+  sostavChisla
 } = require('./index');
 
 describe('parallelLimit', () => {
@@ -466,6 +467,40 @@ describe('folders', () => {
    penguin.png
  shopping-list.pdf
 `);
+  });
+});
+
+describe('sostavChisla', () => {
+  it('test case 1 - базовый случай', () => {
+    const res1 = sostavChisla([1, 2, 3, 4, 5], 5);
+    // Ожидаем комбинации чисел из массива, которые в сумме дают 5
+    expect(res1).toEqual([[1, 4], [2, 3], [5]]);
+  });
+
+  it('test case 2 - все числа в сумме дают целевое', () => {
+    const res2 = sostavChisla([1, 2, 3], 6);
+    expect(res2).toEqual([[1, 2, 3]]);
+  });
+
+  it('test case 3 - несколько комбинаций', () => {
+    const res3 = sostavChisla([1, 2, 3, 4, 5, 6], 7);
+    // Только комбинации из имеющихся чисел
+    expect(res3).toEqual([[1, 2, 4], [1, 6], [2, 5], [3, 4]]);
+  });
+
+  it('test case 4 - целевое число 0', () => {
+    const res4 = sostavChisla([1, 2, 3], 0);
+    expect(res4).toEqual([[]]);
+  });
+
+  it('test case 5 - пустой массив', () => {
+    const res5 = sostavChisla([], 5);
+    expect(res5).toEqual([]);
+  });
+
+  it('test case 6 - нет подходящих комбинаций', () => {
+    const res6 = sostavChisla([2, 4, 6], 5);
+    expect(res6).toEqual([]);
   });
 });
 

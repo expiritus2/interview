@@ -162,7 +162,7 @@ function isEqual(s1, s2) {
 }
 
 function isLetter(s1) {
-  return s1.toLowerCase() === s1.toUpperCase();
+  return s1.toLowerCase() !== s1.toUpperCase();
 }
 
 function isPalindrome(str) {
@@ -1016,6 +1016,49 @@ async function parallelLimit(urls, limit, callback) {
 //   array[1](), // 0
 // ]);
 
+
+function sostavChisla(massivChisel, chislo) {
+  const result = [];
+
+  // Сортируем массив для удобства
+  const sorted = [...massivChisel].sort((a, b) => a - b);
+
+  function backtrack(start, currentCombination, currentSum) {
+    if (currentSum === chislo) {
+      result.push([...currentCombination]);
+      return;
+    }
+
+    if (currentSum > chislo || start >= sorted.length) {
+      return;
+    }
+
+    for (let i = start; i < sorted.length; i++) {
+      // Пропускаем дубликаты, если массив содержит повторяющиеся числа
+      if (i > start && sorted[i] === sorted[i - 1]) continue;
+
+      currentCombination.push(sorted[i]);
+      backtrack(i + 1, currentCombination, currentSum + sorted[i]);
+      currentCombination.pop();
+    }
+  }
+
+  backtrack(0, [], 0);
+  return result;
+}
+
+// Функция для тестирования
+// function runTests() {
+//   console.log(sostavChisla([1, 2, 3, 4, 5], 5)); // [[2, 3], [5]]
+//   console.log(sostavChisla([1, 2, 3], 6)); // [[1, 2, 3]]
+//   console.log(sostavChisla([1, 2, 3, 4], 7)); // [[3, 4], [2, 5], [1, 6]]
+//   console.log(sostavChisla([1, 2, 3], 0)); // []
+//   console.log(sostavChisla([], 5)); // []
+// }
+//
+// runTests();
+
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++
 
 module.exports = {
@@ -1041,4 +1084,5 @@ module.exports = {
   parallelLimit,
   getNodes,
   folders,
+  sostavChisla
 };
