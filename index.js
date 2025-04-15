@@ -1016,6 +1016,7 @@ async function parallelLimit(urls, limit, callback) {
 //   array[1](), // 0
 // ]);
 
+// [1, 2, 3, 4, 5], 5
 
 function sostavChisla(massivChisel, chislo) {
   const result = [];
